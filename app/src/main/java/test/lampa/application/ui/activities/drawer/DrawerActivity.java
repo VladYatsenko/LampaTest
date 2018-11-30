@@ -36,7 +36,6 @@ public class DrawerActivity extends NewsActivity<DrawerPresenter> implements IDr
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
         NavigationUtil.replaceFragment(this, TabNewsFragment.class, null, false, R.id.container);
 
     }

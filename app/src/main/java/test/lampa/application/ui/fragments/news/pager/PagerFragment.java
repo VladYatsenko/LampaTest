@@ -40,8 +40,8 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_pager, container, false);
         ButterKnife.bind(this, view);
-        presenter = new PagerPresenter(getContext());
 
+        presenter = new PagerPresenter(getContext());
         newsAdapter = new NewsAdapter();
 
         newsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -62,6 +62,37 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
         newsAdapter.setItems(list);
     }
 
+    @Override
+    public void updateIndicator(ViewGroup indicatorsContainer, List<NewsModel> list){
+
+        indicatorsContainer.removeAllViews();
+        int buttonSize = (int) getResources().getDimension(R.dimen.padding_small);
+
+        for (int i = 0; i < list.size(); i++) {
+            ImageView button = (ImageView) getLayoutInflater().inflate(R.layout.circle_layout, indicatorsContainer, false);
+            ImageView icon = button.findViewById(R.id.circle);
+            icon.setImageDrawable(getContext().getDrawable(R.drawable.circle));
+
+            if (list.get(i).isSelected()){
+                icon.setColorFilter(getContext().getResources().getColor(R.color.colorBlue));
+            }else{
+                icon.setColorFilter(getContext().getResources().getColor(R.color.colorDarkGrey));
+            }
+            button.setSelected(list.get(i).isSelected());
+
+            indicatorsContainer.addView(button);
+
+            if (i !=  list.size() - 1) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(buttonSize, buttonSize);
+                Space space = new Space(getContext());
+                space.setLayoutParams(params);
+                indicatorsContainer.addView(space);
+            }
+
+        }
+
+    }
+
     public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int TYPE_HEADER = 0;
@@ -72,7 +103,6 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
         void setItems(List<NewsModel> list) {
 
             this.list = list;
-            list.get(0).setSelected(true);
             notifyDataSetChanged();
 
         }
@@ -115,8 +145,8 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
                 NewsModel dataItem = list.get(position-1);
 
                 item.title.setText(dataItem.getTitle());
-                item.date.setText(dataItem.getDate().toString());
-                item.source.setText(dataItem.getSource());
+                item.date.setText("Date: "+dataItem.getDate());
+                item.source.setText("Source: "+dataItem.getSource());
                 Picasso.get().load(dataItem.getImage()).into(item.image);
 
 
@@ -199,14 +229,14 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
     class TopNewsAdapter extends PagerAdapter {
 
         List<NewsModel> list;
-        @BindView(R.id.movie_title)
+        @BindView(R.id.title)
         TextView title;
         @BindView(R.id.image)
         ImageView image;
-        @BindView(R.id.releaseDate)
-        TextView releaseDate;
-        @BindView(R.id.rating)
-        TextView rating;
+        @BindView(R.id.date)
+        TextView date;
+        @BindView(R.id.source)
+        TextView source;
 
         LayoutInflater layoutInflater;
 
@@ -229,8 +259,8 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
             ButterKnife.bind(this, itemView);
 
             title.setText(list.get(position).getTitle());
-            releaseDate.setText("Release date: "+list.get(position).getSource());
-            //rating.setText("Rating: "+dataModels.get(position).getVoteAverage());
+            date.setText("Date: "+list.get(position).getDate());
+            source.setText("Source: "+list.get(position).getSource());
             Picasso.get().load(list.get(position).getImage()).into(image);
 
             container.addView(itemView);
@@ -246,37 +276,6 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
-    }
-
-    @Override
-    public void updateIndicator(ViewGroup indicatorsContainer, List<NewsModel> list){
-
-        indicatorsContainer.removeAllViews();
-        int buttonSize = (int) getResources().getDimension(R.dimen.padding_small);
-
-        for (int i = 0; i < list.size(); i++) {
-             ImageView button = (ImageView) getLayoutInflater().inflate(R.layout.circle_layout, indicatorsContainer, false);
-             ImageView icon = button.findViewById(R.id.circle);
-             icon.setImageDrawable(getContext().getDrawable(R.drawable.circle));
-
-             if (list.get(i).isSelected()){
-                 icon.setColorFilter(getContext().getResources().getColor(R.color.colorBlue));
-             }else{
-                 icon.setColorFilter(getContext().getResources().getColor(R.color.colorDarkGrey));
-             }
-             button.setSelected(list.get(i).isSelected());
-
-             indicatorsContainer.addView(button);
-
-             if (i !=  list.size() - 1) {
-                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(buttonSize, buttonSize);
-                 Space space = new Space(getContext());
-                 space.setLayoutParams(params);
-                 indicatorsContainer.addView(space);
-             }
-
-        }
-
     }
 
     public class FooterItemDecoration extends RecyclerView.ItemDecoration {

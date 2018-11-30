@@ -19,7 +19,6 @@ class PagerPresenter extends NewsPresenter<IPagerView>{
     private Context context;
     private List<NewsModel> newsList = new ArrayList<>();
 
-
     PagerPresenter(Context context){
         this.context = context;
     }
@@ -31,6 +30,7 @@ class PagerPresenter extends NewsPresenter<IPagerView>{
     }
 
     private void responseNewsList() {
+        newsList.clear();
         disposables.add(RetrofitUtil.getMainInstance(context)
                 .getNews()
                 .map(list->{
@@ -43,6 +43,7 @@ class PagerPresenter extends NewsPresenter<IPagerView>{
                                         item.getPrice()
                                 ));
                     }
+                    newsList.get(0).setSelected(true);
                     return newsList;
                 })
                 .subscribeOn(Schedulers.io())

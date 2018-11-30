@@ -1,7 +1,5 @@
 package test.lampa.application.ui.fragments.news.pager.model;
 
-import java.util.Date;
-
 public class NewsModel {
 
     private String title;
@@ -9,7 +7,6 @@ public class NewsModel {
     private String source;
     private String date;
     private boolean selected;
-
 
     public NewsModel(String title, String image, String source, String date) {
         this.title = title;
