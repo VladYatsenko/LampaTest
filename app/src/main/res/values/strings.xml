@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lampa Test</string>
+    <string name="navigation_drawer_open"/>
+    <string name="navigation_drawer_close"/>
+
+    <string name="stories">STORIES</string>
+    <string name="video">VIDEO</string>
+    <string name="favourites">FAVOURITES</string>
+    <string name="top">TOP</string>
+</resources>

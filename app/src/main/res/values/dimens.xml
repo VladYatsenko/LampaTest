@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="padding_micro">1dp</dimen>
+    <dimen name="padding_extra_small">2dp</dimen>
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_small_medium">6dp</dimen>
+    <dimen name="padding">8dp</dimen>
+    <dimen name="padding_medium">12dp</dimen>
+    <dimen name="padding_medium_large">14dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_larger">20dp</dimen>
+    <dimen name="padding_extra_large">24dp</dimen>
+    <dimen name="padding_extra_larger">29dp</dimen>
+    <dimen name="padding_macro">32dp</dimen>
+    <dimen name="padding_macro_bigger">34dp</dimen>
+    <dimen name="padding_macro_larger">42dp</dimen>
+    <dimen name="padding_extra_macro">58dp</dimen>
+
+    <dimen name="all_text_size_extra_small">12sp</dimen>
+    <dimen name="all_text_size_small">14.7sp</dimen>
+    <dimen name="all_text_size_medium">16sp</dimen>
+    <dimen name="all_text_size_medium_big">18sp</dimen>
+    <dimen name="all_text_size_big">20sp</dimen>
+    <dimen name="all_text_size_extra_big">24sp</dimen>
+    <dimen name="all_text_size_extra_bigger">28sp</dimen>
+    <dimen name="all_text_size_large">40sp</dimen>
+    <dimen name="all_text_size_extra_large">60sp</dimen>
+
+    <dimen name="corner_radius">16dp</dimen>
+
+</resources>
