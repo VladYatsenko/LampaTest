@@ -14,7 +14,7 @@ public class RetrofitUtil {
     private static RetrofitUtil retrofitUtil;
     private static RetrofitClient retrofitClient;
 
-    private ApiService apiService = retrofitClient.getClient().create(ApiService.class);
+    //private ApiService apiService = ;
 
     private static RetrofitUtil getInstance() {
         if (retrofitUtil == null) {
@@ -30,8 +30,13 @@ public class RetrofitUtil {
         return getInstance();
     }
 
+
     public Single<NewsResponse> getNews(){
-        return apiService.getNewsList().subscribeOn(Schedulers.io());
+        return retrofitClient.getClient().create(ApiService.class).getNewsList().subscribeOn(Schedulers.io());
+    }
+
+    public Single<NewsResponse> getNextNewsList(String cursor){
+        return retrofitClient.getClient().create(ApiService.class).getNextNewsList(cursor, "json").subscribeOn(Schedulers.io());
     }
 
 }

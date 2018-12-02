@@ -11,4 +11,7 @@ public interface ApiService {
     @GET ("api/v1.0/products/?format=json")
     Single<NewsResponse> getNewsList();
 
+    @GET ("api/v1.0/products")
+    Single<NewsResponse> getNextNewsList(@Query("cursor") String cursor, @Query("format") String format);
+
 }

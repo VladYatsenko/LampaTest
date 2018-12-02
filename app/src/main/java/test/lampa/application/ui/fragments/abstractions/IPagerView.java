@@ -12,4 +12,6 @@ public interface IPagerView extends LifecycleOwner {
     void updateIndicator(ViewGroup indicatorsContainer, List<NewsModel> list);
 
     void updateNewsList(List<NewsModel> list);
+
+    void updateHeader(List<NewsModel> list);
 }

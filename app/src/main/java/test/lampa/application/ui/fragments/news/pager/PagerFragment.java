@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,10 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
 
     @BindView(R.id.news_recycler)
     RecyclerView newsRecycler;
+
+    ViewGroup container;
     private NewsAdapter newsAdapter;
+    private TopNewsAdapter topNewsAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,6 +51,27 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
         newsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         newsRecycler.setAdapter(newsAdapter);
         newsRecycler.addItemDecoration(new FooterItemDecoration());
+
+        topNewsAdapter = new TopNewsAdapter();
+
+
+        newsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int total = layoutManager.getItemCount();
+                int currentLastItem = layoutManager.findLastVisibleItemPosition();
+                if (currentLastItem == total - 1) {
+                    presenter.loadNext();
+                }
+
+            }
+
+        });
 
         return view;
     }
@@ -61,6 +86,12 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
     public void updateNewsList(List<NewsModel> list) {
         newsAdapter.setItems(list);
     }
+
+    @Override
+    public void updateHeader(List<NewsModel> list) {
+        topNewsAdapter.setItems(list);
+    }
+
 
     @Override
     public void updateIndicator(ViewGroup indicatorsContainer, List<NewsModel> list){
@@ -101,11 +132,10 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
         List<NewsModel> list = new ArrayList<>();
 
         void setItems(List<NewsModel> list) {
-
             this.list = list;
             notifyDataSetChanged();
-
         }
+
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
@@ -151,11 +181,10 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
 
 
             } else if (holder instanceof VHHeader) {
-
                 final VHHeader header = (VHHeader) holder;
-                final TopNewsAdapter adapter = new TopNewsAdapter(list);
-                header.itemPager.setAdapter(adapter);
-                updateIndicator(header.indicatorsContainer, list);
+                header.itemPager.setAdapter(topNewsAdapter);
+                presenter.updateIndicator(header.indicatorsContainer);
+                header.itemPager.setCurrentItem(topNewsAdapter.getSelectedPosition());
                 header.itemPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -219,6 +248,7 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
 
             VHHeader(View itemView) {
                 super(itemView);
+                container = indicatorsContainer;
                 ButterKnife.bind(this, itemView);
             }
 
@@ -228,7 +258,8 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
 
     class TopNewsAdapter extends PagerAdapter {
 
-        List<NewsModel> list;
+        List<NewsModel> list ;
+
         @BindView(R.id.title)
         TextView title;
         @BindView(R.id.image)
@@ -240,7 +271,11 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
 
         LayoutInflater layoutInflater;
 
-        TopNewsAdapter(List<NewsModel> list){
+        TopNewsAdapter(){
+            this.list = new ArrayList<>();
+        }
+
+        void setItems(List<NewsModel> list){
             this.list = list;
             notifyDataSetChanged();
         }
@@ -275,6 +310,13 @@ public class PagerFragment extends NewsFragment<PagerPresenter> implements IPage
         @Override
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
+        }
+
+        int getSelectedPosition() {
+            for(NewsModel item:list)
+                if(item.isSelected())
+                    return list.indexOf(item);
+            return 0;
         }
     }
 
